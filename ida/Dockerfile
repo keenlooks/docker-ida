@@ -6,8 +6,13 @@ ARG IDA_PASSWORD
 COPY $IDA_INSTALLATION_FILE /installation/
 COPY requirements.txt /installation/
 
+RUN apt-get update
+RUN apt-get install python-pip
+RUN pip install --upgrade "pip<20.0"
+RUN pip install -U setuptools
+RUN pip install sark
 # Installing requirements for image
-RUN pip2 install -r /installation/requirements.txt
+RUN pip install -r /installation/requirements.txt
 
 # Install IDA
 RUN mkdir /ida
@@ -20,7 +25,7 @@ RUN chmod +x \
     /usr/local/bin/ida_service.sh
 
 # Run IDA installation - echo keyboard input including installation password and "yes" commands
-RUN printf "\n\n\n\n\n\ny\n$IDA_PASSWORD\n/ida\ny\ny\n" | /installation/ida.run
+RUN printf "\n\n\n\n\n\ny\n\n1\n$IDA_PASSWORD\nY\n" | /installation/ida.run
 
 # Create a special file in order to prevent IDA to ask for license acceptance before executing IDA
 RUN touch /ida/license.displayed
